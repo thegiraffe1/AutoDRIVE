@@ -1,7 +1,7 @@
 # AutoDRIVE RoboRacer Multi-Track
 
 ![AutoDRIVE](https://img.shields.io/badge/AutoDRIVE-RoboRacer%202026--iros-blue)
-![Platform](https://img.shields.io/badge/platform-macOS-lightgrey?logo=apple)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)
 ![.NET](https://img.shields.io/badge/.NET-8%20SDK-512BD4?logo=dotnet&logoColor=white)
 ![License](https://img.shields.io/badge/license-BSD--2--Clause-green)
 
@@ -20,9 +20,10 @@ does three things:
 The stock app's own data files are not modified: the plugin is loaded next to them.
 
 > [!NOTE]
-> - The original plugin is built and tested on the **macOS practice build** of release
+> - The original multi-track plugin is built and tested on the **macOS practice build** of release
 >   [`2026-iros`](https://github.com/AutoDRIVE-Ecosystem/AutoDRIVE-RoboRacer-Sim-Racing/releases/tag/2026-iros).
->   This branch adds an experimental Windows IL2CPP plugin foundation; the multi-track features remain macOS-only.
+>   The Windows IL2CPP build uses a different plugin mechanism. This fork adds a separate
+>   [Windows wheel-slip telemetry plugin](README.windows.md); it does not yet port the other multi-track features.
 > - Prebuilt app: release [`f1tenth_multitrack_v3`](https://github.com/Udog-ILLINOIS/AutoDRIVE/releases/tag/f1tenth_multitrack_v3)
 >   (all features, built from `094f9d5`). The older `f1tenth_multitrack_v1` has track selection only.
 
@@ -166,7 +167,7 @@ requirements.txt                 Python dependencies of build_track.py
 
 ## Known limitations
 
-- The original multi-track plugin depends on the macOS build's internal classes; Windows support is experimental.
+- The original multi-track plugin is macOS-only; the Windows IL2CPP plugin currently adds wheel-slip telemetry only.
 - In the Map list, a long track label leaves a wider gap than intended (cosmetic).
 - The sim does not announce resets or respawns itself. A ROS bridge has to detect them from the frames
   (roboracer's `fast_bridge` does).
