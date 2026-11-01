@@ -30,6 +30,7 @@ The stock app's own data files are not modified: the plugin is loaded next to th
 
 | Feature | What it does |
 |---|---|
+| **Per-wheel slip (Windows HUD branch)** | The right HUD's Slip tab plots lateral vs longitudinal slip for all four wheels, with live dots, short history trails, and peak-slip reference lines. The same wheel readings are exposed in Socket.IO telemetry. |
 | **Track selection** | `-track <name>` launch argument. It enables that track and points the lap timer, checkpoints, collision detection, spawn pose and cameras at it. |
 | **Track switching while running** | A **Map** row in the sim's Menu panel and the `track` command switch tracks without restarting the sim. The car goes to the new track's start pose, and the sim's own reset runs at once (encoders, lap and collision counters). |
 | **Custom tracks** | `build_track.py` turns a drawn track map into sim walls, checkpoints and a spawn pose, plus a matching ROS map. Included: `iros2026`. |

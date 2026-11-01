@@ -110,6 +110,7 @@ namespace TrackSelect
 
         void OnSceneLoaded()
         {
+            ResetSlipHistory();
             panel = null; car = null; carSprite = null;
             gtDirty = true;
             searchUntil = Time.realtimeSinceStartup + 20f;
@@ -213,6 +214,9 @@ namespace TrackSelect
             }
             try
             {
+                TickSlipHud();
+                ShowSlipHud();
+                if (slipTab) return;
                 if (gtTrack != null && gtTrack != TrackSelector.Current) ClearMapping();
                 if (gtDirty || gtTrack != TrackSelector.Current) DrawGroundTruth();
                 UpdateMapTexture();
@@ -824,8 +828,10 @@ namespace TrackSelect
             tabTexts.Clear();
             BuildBar();
             var labRt = lab.Cast<RectTransform>();
-            gtTab = Tab("Ground Truth Tab", "Ground Truth", p.transform, labRt, labelText, 0f, 0.5f, false);
-            mapTab = Tab("Mapping Tab", "Mapping", p.transform, labRt, labelText, 0.5f, 1f, true);
+            gtTab = Tab("Ground Truth Tab", "Ground Truth", p.transform, labRt, labelText, 0f, 1f / 3f, false);
+            mapTab = Tab("Mapping Tab", "Mapping", p.transform, labRt, labelText, 1f / 3f, 2f / 3f, true);
+            slipTabButton = Tab("Slip Tab", "Slip", p.transform, labRt, labelText, 2f / 3f, 1f, false, true);
+            BuildSlipHud(p.transform, camRt, labelText);
             label.SetActive(false);
             panel = p;
             Debug.Log(Tag + "map view in place of the Front Camera Preview");
@@ -863,7 +869,7 @@ namespace TrackSelect
         }
 
         // A tab over [x0, x1] of the title's row, its text styled like the title.
-        Image Tab(string name, string text, Transform parent, RectTransform title, Text style, float x0, float x1, bool mapping)
+        Image Tab(string name, string text, Transform parent, RectTransform title, Text style, float x0, float x1, bool mapping, bool slip = false)
         {
             var rt = NewRect(name, parent, new Vector2(Mathf.Lerp(title.anchorMin.x, title.anchorMax.x, x0), title.anchorMin.y),
                              new Vector2(Mathf.Lerp(title.anchorMin.x, title.anchorMax.x, x1), title.anchorMax.y));
@@ -871,7 +877,7 @@ namespace TrackSelect
             Image img = rt.gameObject.AddComponent<Image>();
             Button b = rt.gameObject.AddComponent<Button>();
             b.targetGraphic = img;
-            b.onClick.AddListener(new System.Action(() => mappingTab = mapping));
+            b.onClick.AddListener(new System.Action(() => { mappingTab = mapping; slipTab = slip; }));
             var trt = NewRect("Label", rt, Vector2.zero, Vector2.one);
             Text t = trt.gameObject.AddComponent<Text>();
             t.font = style != null ? style.font : Resources.GetBuiltinResource<Font>("Arial.ttf");

@@ -1,8 +1,7 @@
 # Windows extensions for the 2026 IROS practice simulator
 
-This branch builds on `windows-il2cpp-compat` and ports the existing macOS
-extension modules to BepInEx 6 on Windows IL2CPP. Wheel-slip telemetry remains
-on its separate branch.
+This branch builds on the Windows extension port and adds wheel-slip telemetry
+and a live Slip HUD. The original extension-only branch remains `windows-extensions`.
 
 Features include built-in and custom track selection, switching and reset/lap
 state updates; autoconnect and safe disconnect; the TCP control API and Menu
@@ -62,6 +61,30 @@ The original macOS sources remain in `track_select/`.
 
 The plugin targets .NET 6 for the loader. No stock game assemblies or generated
 interop binaries are committed to this repository.
+
+## Per-wheel Slip HUD
+
+Open the right HUD with the top-right button, then choose **Slip** beside
+Ground Truth and Mapping. The expanded panel shows front left/front right above
+rear left/rear right. Each wheel has a current dot, three seconds of history,
+and raw lateral/longitudinal slip values.
+
+The horizontal axis is lateral slip divided by `sidewaysFriction.extremumSlip`;
+the vertical axis is longitudinal slip divided by `forwardFriction.extremumSlip`.
+Both axes span -2 to +2, and dashed lines mark +/-1. These are peak-slip
+coordinates from the configured friction curves, not a combined tire-force
+boundary. No acceleration in g is inferred. Unity's slip signs are preserved.
+Dots beyond the plotted range are red at the edge and labeled `off scale`.
+An airborne wheel shows `no ground contact` and clears its trail.
+
+The Slip HUD was checked in the graphical Windows simulator with four grounded
+wheels at rest, including tab selection and layout. A driving-lap check is still
+needed to validate the moving traces end to end.
+
+Readings are sampled on Unity's main thread at up to 20 Hz even without a bridge
+connection. The Socket.IO `Bridge` frame also includes `V1 Wheel Slip`: four
+`grounded forwardSlip sidewaysSlip` triples, ordered FL, FR, RL, RR. A wheel
+with no ground hit is encoded as `0 0 0` (unavailable slip).
 
 ## Validation
 
