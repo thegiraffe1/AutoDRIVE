@@ -68,6 +68,9 @@ Open the right HUD with the top-right button, then choose **Slip** beside
 Ground Truth and Mapping. The expanded panel shows front left/front right above
 rear left/rear right. Each wheel has a current dot, three seconds of history,
 and raw lateral/longitudinal slip values.
+Each value also shows `abs(raw slip) / configured peak` in parentheses, matching
+the native-source calculation in the ROS stack's `docs/tire_lap_report.md`.
+Plot coordinates retain their signs; the reported magnitude ratios are unsigned.
 
 The horizontal axis is lateral slip divided by `sidewaysFriction.extremumSlip`;
 the vertical axis is longitudinal slip divided by `forwardFriction.extremumSlip`.
@@ -87,6 +90,14 @@ That is consistent with substantial wheelspin and exceeds the old +/-0.30
 longitudinal display range. The adaptive display retains the measured values
 without clipping ordinary wheelspin/braking samples. Raw Unity signs are
 preserved; the manual run showed positive slip with wheelspin.
+
+An independent cross-check used `(wheel surface speed - vehicle speed) /
+max(wheel surface speed, vehicle speed)` for positive wheel RPM, vehicle speeds
+above 1 m/s, and absolute lateral slip below 0.002. Across 157 wheel samples,
+its median absolute difference from native forward slip was 0.0041. This is a
+diagnostic approximation and is not substituted for Unity telemetry. The old
+kinematic lateral estimator is not used in the HUD; the report documents its
+poor agreement with native lateral slip.
 
 Readings are sampled on Unity's main thread at up to 20 Hz even without a bridge
 connection. The Socket.IO `Bridge` frame also includes `V1 Wheel Slip`: four

@@ -172,7 +172,7 @@ public partial class MapView
                 var point = new Vector2(s.Sideways / Mathf.Max(s.SidewaysPeak, 1e-6f), s.Forward / Mathf.Max(s.ForwardPeak, 1e-6f));
                 bool clipped = Mathf.Abs(point.x) > slipRangeX || Mathf.Abs(point.y) > slipRangeY;
                 Dot(point, clipped ? new Color32(255, 80, 80, 255) : wheelColors[i], 3);
-                slipLabels[i].text = $"{wheelNames[i]}{(clipped ? " [off scale]" : "")}\nlat {s.Sideways:0.0000}\nlong {s.Forward:0.0000}";
+                slipLabels[i].text = $"{wheelNames[i]}{(clipped ? " [off scale]" : "")}\nlat {s.Sideways:0.000} ({Mathf.Abs(point.x):0.0}x)\nlong {s.Forward:0.000} ({Mathf.Abs(point.y):0.0}x)";
             }
             [HideFromIl2Cpp]
             void Dot(Vector2 p, Color32 color, int radius)
@@ -184,7 +184,7 @@ public partial class MapView
             }
         }
         slipTexture.SetPixels32(slipPixels); slipTexture.Apply(false);
-        slipFooter.text = $"x: lateral +/-{slipRangeX:0} peaks   y: long +/-{slipRangeY:0} peaks\nAuto range; dashed +/-1. Raw Unity signs preserved.";
+        slipFooter.text = $"x: lateral +/-{slipRangeX:0}x   y: long +/-{slipRangeY:0}x\nNumbers: raw (|slip|/peak); dashed lines: 1x";
         [HideFromIl2Cpp]
         void Put(int x, int y, Color32 color)
         { if (x >= 0 && x < 512 && y >= 0 && y < 512) slipPixels[y * 512 + x] = color; }
