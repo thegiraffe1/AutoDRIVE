@@ -70,15 +70,13 @@ rear left/rear right. Each wheel has a current dot, three seconds of history,
 and raw lateral/longitudinal slip values.
 Each value also shows `abs(raw slip) / configured peak` in parentheses, matching
 the native-source calculation in the ROS stack's `docs/tire_lap_report.md`.
-Plot coordinates use absolute ratios, matching the report's magnitude profiles.
-The raw text and outgoing telemetry retain Unity's original signs. The offline
-report takes the larger ratio on each axle; the HUD shows each wheel individually.
+Plot coordinates retain their signs; the reported magnitude ratios are unsigned.
 
-The horizontal axis is absolute lateral slip divided by `sidewaysFriction.extremumSlip`;
-the vertical axis is absolute longitudinal slip divided by `forwardFriction.extremumSlip`.
-Both axes start at 0 to 2 and automatically expand in powers of two to fit the
+The horizontal axis is lateral slip divided by `sidewaysFriction.extremumSlip`;
+the vertical axis is longitudinal slip divided by `forwardFriction.extremumSlip`.
+Both axes start at -2 to +2 and automatically expand in powers of two to fit the
 recent samples. All wheels share the same scales, shown below the charts. Scales
-are held for five seconds before shrinking; dashed lines mark 1. These are peak-slip
+are held for five seconds before shrinking; dashed lines mark +/-1. These are peak-slip
 coordinates from the configured friction curves, not a combined tire-force
 boundary. No acceleration in g is inferred. Unity's slip signs are preserved.
 Dots beyond the plotted range are red at the edge and labeled `off scale`.

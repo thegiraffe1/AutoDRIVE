@@ -74,7 +74,7 @@ public partial class MapView
         slipFooter.alignment = TextAnchor.MiddleCenter; slipFooter.resizeTextForBestFit = true;
         slipFooter.resizeTextMinSize = 6; slipFooter.resizeTextMaxSize = 12;
         slipFooter.raycastTarget = false;
-        slipFooter.text = "|slip|/peak: x lateral; y longitudinal\nRange 0-2; dashed lines mark 1";
+        slipFooter.text = "x: lateral / peak   y: longitudinal / peak\nRange +/-2; dashed +/-1 are peak-slip references";
         slipFooter.gameObject.SetActive(false);
     }
 
@@ -144,17 +144,18 @@ public partial class MapView
         for (int i = 0; i < 4; i++)
         {
             int ox = (i % 2) * 256, oy = i < 2 ? 256 : 0;
-            // Shared magnitude axes across all wheels. Dashed +1 lines are
+            // Shared adaptive axes across all wheels. Dashed +/-1 lines are
             // separate friction-curve coordinates, not a combined force boundary.
             for (int p = 16; p <= 240; p++)
             {
-                Put(ox + p, oy + 16, new Color32(110, 118, 126, 255));
-                Put(ox + 16, oy + 16 + (p - 16) * 160 / 224, new Color32(110, 118, 126, 255));
+                Put(ox + p, oy + 96, new Color32(110, 118, 126, 255));
+                Put(ox + 128, oy + 16 + (p - 16) * 160 / 224, new Color32(110, 118, 126, 255));
                 if (p % 8 < 4)
-                {
-                    Put(ox + p, oy + 16 + Mathf.RoundToInt(160 / slipRangeY), new Color32(110, 118, 126, 255));
-                    Put(ox + 16 + Mathf.RoundToInt(224 / slipRangeX), oy + 16 + (p - 16) * 160 / 224, new Color32(110, 118, 126, 255));
-                }
+                    foreach (int sign in new[] { -1, 1 })
+                    {
+                        Put(ox + p, oy + 96 + sign * Mathf.RoundToInt(80 / slipRangeY), new Color32(61, 72, 83, 255));
+                        Put(ox + 128 + sign * Mathf.RoundToInt(112 / slipRangeX), oy + 16 + (p - 16) * 160 / 224, new Color32(61, 72, 83, 255));
+                    }
             }
             foreach (var sample in slipHistory[i])
             {
@@ -176,14 +177,14 @@ public partial class MapView
             [HideFromIl2Cpp]
             void Dot(Vector2 p, Color32 color, int radius)
             {
-                int x = ox + 16 + Mathf.RoundToInt(Mathf.Clamp01(Mathf.Abs(p.x) / slipRangeX) * 224);
-                int y = oy + 16 + Mathf.RoundToInt(Mathf.Clamp01(Mathf.Abs(p.y) / slipRangeY) * 160);
+                int x = ox + 128 + Mathf.RoundToInt(Mathf.Clamp(p.x / slipRangeX, -1, 1) * 112);
+                int y = oy + 96 + Mathf.RoundToInt(Mathf.Clamp(p.y / slipRangeY, -1, 1) * 80);
                 for (int dx = -radius; dx <= radius; dx++)
                     for (int dy = -radius; dy <= radius; dy++) Put(x + dx, y + dy, color);
             }
         }
         slipTexture.SetPixels32(slipPixels); slipTexture.Apply(false);
-        slipFooter.text = $"|slip|/peak: x lateral 0-{slipRangeX:0}; y long 0-{slipRangeY:0}\nDashed lines: 1. Numbers: raw (ratio).";
+        slipFooter.text = $"x: lateral +/-{slipRangeX:0}x   y: long +/-{slipRangeY:0}x\nNumbers: raw (|slip|/peak); dashed lines: 1x";
         [HideFromIl2Cpp]
         void Put(int x, int y, Color32 color)
         { if (x >= 0 && x < 512 && y >= 0 && y < 512) slipPixels[y * 512 + x] = color; }
