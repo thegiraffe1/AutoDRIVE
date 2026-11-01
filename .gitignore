@@ -6,3 +6,6 @@ track_select/bin/
 track_select_windows/obj/
 track_select_windows/bin/
 .DS_Store
+
+# Local simulator diagnostics
+/log/

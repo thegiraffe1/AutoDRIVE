@@ -71,15 +71,22 @@ and raw lateral/longitudinal slip values.
 
 The horizontal axis is lateral slip divided by `sidewaysFriction.extremumSlip`;
 the vertical axis is longitudinal slip divided by `forwardFriction.extremumSlip`.
-Both axes span -2 to +2, and dashed lines mark +/-1. These are peak-slip
+Both axes start at -2 to +2 and automatically expand in powers of two to fit the
+recent samples. All wheels share the same scales, shown below the charts. Scales
+are held for five seconds before shrinking; dashed lines mark +/-1. These are peak-slip
 coordinates from the configured friction curves, not a combined tire-force
 boundary. No acceleration in g is inferred. Unity's slip signs are preserved.
 Dots beyond the plotted range are red at the edge and labeled `off scale`.
 An airborne wheel shows `no ground contact` and clears its trail.
 
-The Slip HUD was checked in the graphical Windows simulator with four grounded
-wheels at rest, including tab selection and layout. A driving-lap check is still
-needed to validate the moving traces end to end.
+The Slip HUD was checked in the graphical Windows simulator at rest and during
+manual driving. A 120-sample slip/RPM/speed capture showed why a fixed range
+clipped the longitudinal dots: at 3.318 m/s, one wheel reported 4079 RPM
+(25.20 m/s of tire surface speed at radius 0.059 m) and forward slip 0.865.
+That is consistent with substantial wheelspin and exceeds the old +/-0.30
+longitudinal display range. The adaptive display retains the measured values
+without clipping ordinary wheelspin/braking samples. Raw Unity signs are
+preserved; the manual run showed positive slip with wheelspin.
 
 Readings are sampled on Unity's main thread at up to 20 Hz even without a bridge
 connection. The Socket.IO `Bridge` frame also includes `V1 Wheel Slip`: four
@@ -94,3 +101,5 @@ custom IROS 2026 import, switching to Berlin and back, obstacle commands, livery
 reload, ground-truth map rendering, the Menu Map picker, screenshots, and
 drag-to-place obstacles followed by removal. Mapping updates from ROS and
 gamepad behavior still need a map sender and physical controller for validation.
+
+The read-only control command `slip` returns raw slip, friction-curve peak coordinates, wheel RPM, and vehicle speed for diagnosing chart readings. Auto-ranging changes only the plotted scale; it does not smooth or alter the slip values.

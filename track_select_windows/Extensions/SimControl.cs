@@ -195,6 +195,7 @@ namespace TrackSelect
             switch (cmd)
             {
                 case "status": return Status();
+                case "slip": return TrackSelect.Windows.WheelSlipData.Diagnostics();
                 case "tracks":
                     return "{\"ok\":true,\"current\":" + Str(TrackSelector.Current) + ",\"tracks\":[" +
                            string.Join(",", TrackSelector.Tracks.Select(t => "{\"name\":" + Str(TrackSelector.Key(t)) +
