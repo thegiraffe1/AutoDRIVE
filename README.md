@@ -22,7 +22,7 @@ The stock app's own data files are not modified: the plugin is loaded next to th
 > [!NOTE]
 > - The original plugin is built and tested on the **macOS practice build** of release
 >   [`2026-iros`](https://github.com/AutoDRIVE-Ecosystem/AutoDRIVE-RoboRacer-Sim-Racing/releases/tag/2026-iros).
->   This branch adds an experimental Windows IL2CPP plugin foundation; the multi-track features remain macOS-only.
+>   This fork ports the extension features to Windows IL2CPP using BepInEx; see [Windows setup](README.windows.md).
 > - Prebuilt app: release [`f1tenth_multitrack_v3`](https://github.com/Udog-ILLINOIS/AutoDRIVE/releases/tag/f1tenth_multitrack_v3)
 >   (all features, built from `094f9d5`). The older `f1tenth_multitrack_v1` has track selection only.
 
@@ -166,7 +166,7 @@ requirements.txt                 Python dependencies of build_track.py
 
 ## Known limitations
 
-- The original multi-track plugin depends on the macOS build's internal classes; Windows support is experimental.
+- Windows support targets the 2026 IROS IL2CPP practice build; other versions require rebuilding and validation.
 - In the Map list, a long track label leaves a wider gap than intended (cosmetic).
 - The sim does not announce resets or respawns itself. A ROS bridge has to detect them from the frames
   (roboracer's `fast_bridge` does).
