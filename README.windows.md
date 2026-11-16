@@ -22,7 +22,7 @@ steering/throttle assists. Windows uses XInput instead of macOS libusb.
 4. Install a .NET 8 SDK. From this repository in PowerShell, run:
 
 ```powershell
-./install_windows.ps1 -SimulatorDir 'D:\Downloads\autodrive_windows_extensions'
+./install_windows.ps1 -SimulatorDir 'path\to\autodrive_folder'
 ```
 
 The script builds the plugin against that simulator's bindings and installs
@@ -31,7 +31,7 @@ the DLL, custom tracks, and livery. Close the simulator before installing.
 Launch the copied simulator:
 
 ```powershell
-& 'D:\Downloads\autodrive_windows_extensions\AutoDRIVE Simulator.exe' -track iros2026 -autoconnect
+& 'path\to\autodrive_folder\AutoDRIVE Simulator.exe' -track iros2026 -autoconnect
 ```
 
 Use `-control-port 4580` and `-mapview-port 4581` to choose the API and Mapping
